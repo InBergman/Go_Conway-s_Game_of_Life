@@ -10,6 +10,10 @@ import (
 const (
 	width              = 500
 	heigth             = 500
+
+	rows = 10
+	columns = 10
+
 	vertexShaderSource = `
 	#version 410
 	in vec3 vp;
