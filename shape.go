@@ -1,10 +1,17 @@
 package main
 
+import "github.com/go-gl/glow/gl"
+
 type cell struct {
 	drawable uint32
 
 	x int
 	y int
+}
+
+func (c *cell) draw() {
+	gl.BindVertexArray(c.drawable)
+	gl.DrawArrays(gl.TRIANGLES, 0, int32(len(square)/3))
 }
 
 func makeCells() [][]*cell {

@@ -7,12 +7,19 @@ import (
 	"github.com/go-gl/glow/gl"
 )
 
-func draw(vao uint32, window *glfw.Window, prog uint32) {
+func draw(cells [][]*cell, window *glfw.Window, prog uint32) {
 	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 	gl.UseProgram(prog)
 
-	gl.BindVertexArray(vao)
-	gl.DrawArrays(gl.TRIANGLES, 0, int32(len(square)/3))
+	// for x := range cells {
+	// 	for _, c := range cells[x] {
+	// 		c.draw()
+	// 	}
+	// }
+
+	cells[4][4].draw()
+	cells[2][2].draw()
+	cells[3][5].draw()
 
 	glfw.PollEvents()
 	window.SwapBuffers()
@@ -24,9 +31,10 @@ func main() {
 	defer glfw.Terminate()
 
 	prog := initOpengl()
-	vao := makeVao(square)
+	cells := makeCells()
+	//vao := makeVao(square)
 	for !window.ShouldClose() {
-		draw(vao, window, prog)
+		draw(cells, window, prog)
 	}
 
 }
