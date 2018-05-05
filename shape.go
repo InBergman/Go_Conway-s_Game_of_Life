@@ -15,7 +15,7 @@ func (c *cell) draw() {
 }
 
 func makeCells() [][]*cell {
-	cells := make([][]*cell, rows, rows)
+	cells := make([][]*cell, rows, columns)
 	for x := 0; x < rows; x++ {
 		for y := 0; y < columns; y++ {
 			c := newCells(x, y)

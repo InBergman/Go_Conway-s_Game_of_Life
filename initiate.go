@@ -8,11 +8,13 @@ import (
 )
 
 const (
-	width              = 500
-	heigth             = 500
+	width  = 1080
+	heigth = 720
 
-	rows = 10
-	columns = 10
+	rows    = 2
+	columns = 2
+
+	fps = 2
 
 	vertexShaderSource = `
 	#version 410
@@ -25,7 +27,7 @@ const (
 	#version 410
 	out vec4 frag_colour;
 	void main() {
-		frag_colour = vec4(1, 1, 1, 1);
+		frag_colour = vec4(0.2, 0.6, 0.3, 1);
 	}
 	` + "\x00"
 )
@@ -39,6 +41,7 @@ func initOpengl() uint32 {
 	if err != nil {
 		panic(err)
 	}
+
 	fragmentShader, err := compileShader(fragmentShaderSource, gl.FRAGMENT_SHADER)
 	if err != nil {
 		panic(err)
