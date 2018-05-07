@@ -11,11 +11,12 @@ import (
 func draw(cells [][]*cell, window *glfw.Window, prog uint32) {
 	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 	gl.UseProgram(prog)
-	for x := range cells {
-		for _, c := range cells[x] {
-			c.draw()
-		}
-	}
+	// for x := range cells {
+	// 	for _, c := range cells[x] {
+	// 		c.draw()
+	// 	}
+	// }
+	cells[4][4].draw()
 	glfw.PollEvents()
 	window.SwapBuffers()
 }

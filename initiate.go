@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 
 	"github.com/go-gl/glfw/v3.2/glfw"
 	"github.com/go-gl/glow/gl"
@@ -11,47 +12,38 @@ const (
 	width  = 1080
 	heigth = 720
 
-	rows    = 2
-	columns = 2
+	rows    = 10
+	columns = 10
 
 	fps = 2
-
-	vertexShaderSource = `
-	#version 410
-	in vec3 vp;
-	void main() {
-		gl_Position = vec4(vp, 1.0);
-	}
-	` + "\x00"
-	fragmentShaderSource = `
-	#version 410
-	out vec4 frag_colour;
-	void main() {
-		frag_colour = vec4(0.2, 0.6, 0.3, 1);
-	}
-	` + "\x00"
 )
 
 func initOpengl() uint32 {
+
+	vertexShaderSource, _ := ioutil.ReadFile("./vertexShader.glsl")
+	fragmentShaderSource, _ := ioutil.ReadFile("./fragmentShader.glsl")
+
 	if err := gl.Init(); err != nil {
 		panic(err)
 	}
 
-	vertexShader, err := compileShader(vertexShaderSource, gl.VERTEX_SHADER)
+	vertexShader, err := compileShader(string(vertexShaderSource), gl.VERTEX_SHADER)
 	if err != nil {
 		panic(err)
 	}
-
-	fragmentShader, err := compileShader(fragmentShaderSource, gl.FRAGMENT_SHADER)
+	defer gl.DeleteShader(vertexShader)
+	fragmentShader, err := compileShader(string(fragmentShaderSource), gl.FRAGMENT_SHADER)
 	if err != nil {
 		panic(err)
 	}
+	defer gl.DeleteShader(fragmentShader)
 	version := gl.GoStr(gl.GetString(gl.VERSION))
 	fmt.Println("Opengl Version = ", version)
 	prog := gl.CreateProgram()
 	gl.AttachShader(prog, vertexShader)
 	gl.AttachShader(prog, fragmentShader)
 	gl.LinkProgram(prog)
+	gl.ValidateProgram(prog)
 	return prog
 }
 
@@ -70,6 +62,5 @@ func initGlfw() *glfw.Window {
 		panic(err)
 	}
 	window.MakeContextCurrent()
-
 	return window
 }

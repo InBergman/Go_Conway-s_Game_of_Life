@@ -1,6 +1,8 @@
 package main
 
-import "github.com/go-gl/glow/gl"
+import (
+	"github.com/go-gl/glow/gl"
+)
 
 var (
 	triangle = []float32{
@@ -21,6 +23,7 @@ var (
 
 func makeVao(vertex_coor []float32) uint32 {
 	var vbo uint32
+
 	gl.GenBuffers(1, &vbo)
 	gl.BindBuffer(gl.ARRAY_BUFFER, vbo)
 	gl.BufferData(gl.ARRAY_BUFFER, 4*len(vertex_coor), gl.Ptr(vertex_coor), gl.STATIC_DRAW)
