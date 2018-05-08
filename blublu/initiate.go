@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"strings"
 
 	"github.com/go-gl/glfw/v3.2/glfw"
 	"github.com/go-gl/glow/gl"
@@ -18,7 +19,7 @@ const (
 	fps = 2
 )
 
-func initOpengl() uint32 {
+func initOpengl() (uint32, error) {
 	vertexShaderSource, vertexErr := ioutil.ReadFile("blublu/res/shaders/vertexShader.glsl")
 	fragmentShaderSource, fragmentErr := ioutil.ReadFile("blublu/res/shaders/fragmentShader.glsl")
 
@@ -27,6 +28,7 @@ func initOpengl() uint32 {
 	} else if fragmentErr != nil {
 		panic(fragmentErr)
 	}
+
 	if err := gl.Init(); err != nil {
 		panic(err)
 	}
@@ -41,14 +43,27 @@ func initOpengl() uint32 {
 		panic(err)
 	}
 	defer gl.DeleteShader(fragmentShader)
+	programID := gl.CreateProgram()
 	version := gl.GoStr(gl.GetString(gl.VERSION))
 	fmt.Println("Opengl Version = ", version)
-	prog := gl.CreateProgram()
-	gl.AttachShader(prog, vertexShader)
-	gl.AttachShader(prog, fragmentShader)
-	gl.LinkProgram(prog)
-	gl.ValidateProgram(prog)
-	return prog
+	gl.AttachShader(programID, vertexShader)
+	gl.AttachShader(programID, fragmentShader)
+	gl.LinkProgram(programID)
+
+	gl.DetachShader(programID, vertexShader)
+	gl.DetachShader(programID, fragmentShader)
+
+	var status int32
+	gl.GetProgramiv(programID, gl.LINK_STATUS, &status)
+	if status == gl.FALSE {
+		var logLength int32
+		gl.GetProgramiv(programID, gl.INFO_LOG_LENGTH, &logLength)
+
+		log := strings.Repeat("\x00", int(logLength+1))
+		gl.GetProgramInfoLog(programID, logLength, nil, gl.Str(log))
+		return 0, fmt.Errorf("failed to link program: %v", log)
+	}
+	return programID, nil
 }
 
 func initGlfw() *glfw.Window {

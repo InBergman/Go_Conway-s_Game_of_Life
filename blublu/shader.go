@@ -8,8 +8,8 @@ import (
 )
 
 func compileShader(source string, shaderType uint32) (uint32, error) {
-	shader := gl.CreateShader(shaderType)
 
+	shader := gl.CreateShader(shaderType)
 	csources, free := gl.Strs(source)
 	gl.ShaderSource(shader, 1, csources, nil)
 	free()
