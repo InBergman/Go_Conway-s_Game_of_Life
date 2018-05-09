@@ -22,7 +22,7 @@ func compileShader(source string, shaderType uint32) (uint32, error) {
 		gl.GetShaderiv(shader, gl.INFO_LOG_LENGTH, &logLength)
 		log := strings.Repeat("\x00", int(logLength+1))
 		gl.GetShaderInfoLog(shader, logLength, nil, gl.Str(log))
-		return 0, fmt.Errorf("fail to compile %v : %v", source, log)
+		return 0, fmt.Errorf("[Shader] fail to compile %v : %v", source, log)
 	}
 	return shader, nil
 }

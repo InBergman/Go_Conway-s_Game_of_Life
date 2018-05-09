@@ -12,11 +12,6 @@ import (
 const (
 	width  = 1080
 	heigth = 720
-
-	rows    = 10
-	columns = 10
-
-	fps = 2
 )
 
 func initOpengl() (uint32, error) {

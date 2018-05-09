@@ -1,22 +1,31 @@
 package main
 
 import (
+	"github.com/go-gl/glfw/v3.2/glfw"
 	"github.com/go-gl/glow/gl"
 )
 
-func makeVao(vertex_coor []float32) uint32 {
-	var vbo uint32
+func initVao(programID, buffer *uint32, vertexBufferData []float32) {
+	*programID, _ = initOpengl()
+	var vertexArrayID uint32
+	gl.GenVertexArrays(1, &vertexArrayID)
+	gl.BindVertexArray(vertexArrayID)
 
-	gl.GenBuffers(1, &vbo)
-	gl.BindBuffer(gl.ARRAY_BUFFER, vbo)
-	gl.BufferData(gl.ARRAY_BUFFER, 4*len(vertex_coor), gl.Ptr(vertex_coor), gl.STATIC_DRAW)
+	gl.GenBuffers(1, buffer)
+	gl.BindBuffer(gl.ARRAY_BUFFER, *buffer)
+	gl.BufferData(gl.ARRAY_BUFFER, len(vertexBufferData)*4, gl.Ptr(vertexBufferData), gl.STATIC_DRAW)
+}
 
-	var vao uint32
-	gl.GenVertexArrays(1, &vao)
-	gl.BindVertexArray(vao)
+func draw(programID, buffer uint32, window *glfw.Window) {
+	gl.Clear(gl.COLOR_BUFFER_BIT)
+	gl.UseProgram(programID)
+	//	gl.DrawArrays(gl.TRIANGLES, 0, 3)
 	gl.EnableVertexAttribArray(0)
-	gl.BindBuffer(gl.ARRAY_BUFFER, vbo)
+	gl.BindBuffer(gl.ARRAY_BUFFER, buffer)
 	gl.VertexAttribPointer(0, 3, gl.FLOAT, false, 0, nil)
 
-	return vao
+	gl.DrawArrays(gl.TRIANGLES, 0, 3)
+	gl.DisableVertexAttribArray(0)
+	window.SwapBuffers()
+	glfw.PollEvents()
 }
