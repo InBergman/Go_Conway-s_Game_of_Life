@@ -22,7 +22,7 @@ func draw(programID, buffer uint32, window *glfw.Window) {
 	//	gl.DrawArrays(gl.TRIANGLES, 0, 3)
 	gl.EnableVertexAttribArray(0)
 	gl.BindBuffer(gl.ARRAY_BUFFER, buffer)
-	gl.VertexAttribPointer(0, 3, gl.FLOAT, false, 0, nil)
+	gl.VertexAttribPoint er(0, 3, gl.FLOAT, false, 0, nil)
 
 	gl.DrawArrays(gl.TRIANGLES, 0, 3)
 	gl.DisableVertexAttribArray(0)
